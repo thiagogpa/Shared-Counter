@@ -3,7 +3,8 @@ import { socket } from "./components/global/header";
 
 import FlipNumbers from "react-flip-numbers";
 
-class Counter extends Component {
+class Counter extends Component { 
+
   constructor() {
     super();
     this.state = {
@@ -46,7 +47,14 @@ class Counter extends Component {
   };
 
   // To get the initial data
-  getFoodData() {
+  getCounterData() {
+    let localData = localStorage.getItem("currentCounterName")
+    
+    if (!localData){
+      console.log("PUSH")
+      this.props.history.push(`/`);
+    }
+    
     return (
       <div className="app">
         <div>
@@ -63,7 +71,7 @@ class Counter extends Component {
           <div class="buttons">
             <button
               onClick={() =>
-                this.subtractCounter(localStorage.getItem("currentCounterName"))
+                this.subtractCounter(localData)
               }
             >
               -
@@ -71,7 +79,7 @@ class Counter extends Component {
 
             <button
               onClick={() =>
-                this.addCounter(localStorage.getItem("currentCounterName"))
+                this.addCounter(localData)
               }
             >
               +
@@ -83,7 +91,7 @@ class Counter extends Component {
   }
 
   render() {
-    return <div>{this.getFoodData()}</div>;
+    return <div>{this.getCounterData()}</div>;
   }
 }
 export default Counter;
