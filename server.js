@@ -51,15 +51,37 @@ io.on("connection", (socket) => {
 
   let Counter = require("./models/Counter");
 
+  // when the client emits 'adduser', this listens and executes
+  socket.on("adduser", (roomName) => {
+    logger.trace("USER = " + socket.id);
+
+    // store the room name in the socket session for this client
+
+    logger.trace("Leaving previous Room");
+    if (socket.room != roomName) socket.leave(socket.room);
+
+    socket.room = roomName;
+    // add the client's username to the global list
+    // send client to room 1
+    socket.join(roomName);
+
+    io.sockets.in(socket.room).emit("change_data");
+
+    logger.trace("User added to room = " + roomName);
+  });
+
   // Returning the initial data
   socket.on("initial_data", (id) => {
+    logger.debug("initial_data " + id);
     Counter.findOne({ code: id }).then((docs) => {
-      io.sockets.emit("get_data", docs);
+      logger.debug("Found data" + docs);
+      io.sockets.in(socket.room).emit("get_data", docs);
     });
   });
 
   socket.on("addCounter", (id) => {
     logger.debug("Calling add counter");
+    logger.trace("USER = " + socket.id);
 
     Counter.updateOne(
       { code: "total" },
@@ -69,7 +91,7 @@ io.on("connection", (socket) => {
     Counter.updateOne({ code: id }, { $inc: { counter: 1 } }).then(
       (updatedDoc) => {
         // Emitting event to update the Counter across the devices with the realtime value
-        io.sockets.emit("change_data");
+        io.sockets.in(socket.room).emit("change_data");
       }
     );
   });
@@ -80,7 +102,7 @@ io.on("connection", (socket) => {
     Counter.updateOne({ code: id }, { $inc: { counter: -1 } }).then(
       (updatedDoc) => {
         // Emitting event to update the Counter across the devices with the realtime value
-        io.sockets.emit("change_data");
+        io.sockets.in(socket.room).emit("change_data");
       }
     );
   });
@@ -88,6 +110,7 @@ io.on("connection", (socket) => {
   // disconnect is fired when a client leaves the server
   socket.on("disconnect", () => {
     logger.trace("User disconnected");
+    socket.leave(socket.room);
   });
 });
 

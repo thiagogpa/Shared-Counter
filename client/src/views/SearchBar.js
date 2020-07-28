@@ -44,7 +44,7 @@ export default function SearchBar() {
     axiosInstance
       .get("/api/" + event.counterName.toUpperCase())
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         localStorage.setItem("currentCounterName", response.data.code);
         history.push(`/counter`);
       })
