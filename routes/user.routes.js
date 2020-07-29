@@ -7,12 +7,8 @@ module.exports = (app) => {
   router.post(
     "/",
     [
-      check("email", "e-mail is required").not().isEmpty(),
+      check("username", "username is required").not().isEmpty(),
       check("password", "Password is required").not().isEmpty(),
-      check("password", "Password size must be 3-20 chars").isLength({
-        min: 3,
-        max: 20,
-      }),
     ],
     async (req, res) => {
       const errors = validationResult(req);
@@ -36,11 +32,18 @@ module.exports = (app) => {
     await user.findOne(req, res);
   });
 
+
+  // Retrieve a single User by ID
+  router.put("/addToGroup/:id", async (req, res) => {
+    await user.addToGroup(req, res);
+  });
+
+
   // Update a User by id
   router.put(
     "/:id",
     [
-      check("email", "e-mail is required").not().isEmpty(),
+      check("username", "username is required").not().isEmpty(),
       check("password", "Password is required").not().isEmpty(),
       check("password", "Password size must be 3-20 chars").isLength({
         min: 3,
@@ -61,7 +64,7 @@ module.exports = (app) => {
 
   // Delete a User by id
   router.delete("/:id", async (req, res) => {
-    res.json(await user.delete(req, res));
+    await user.delete(req, res);
   });
 
   app.use("/api/user", router);

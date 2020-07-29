@@ -10,21 +10,15 @@ exports.create = async (req, res) => {
   logger.trace("Calling User Creation Api");
 
   try {
-
-    const newGroup = new Group({
-      group: req.body.group,
-    });
-
     const newUser = new User({
-      email: req.body.email,
+      username: req.body.username,
       password: req.body.password,
-      group: newGroup
     });
 
-    const user = await User.findOne({ email: newUser.email });
+    const user = await User.findOne({ username: newUser.username });
     if (user != null)
-      res.status(409).send({
-        message: "User e-mail already in use, please inform an unique email",        
+      return res.status(409).send({
+        message: "User e-mail already in use, please inform an unique username",
       });
 
     const saltRounds = 10;
@@ -95,20 +89,17 @@ exports.findOne = async (req, res) => {
 exports.update = async (req, res) => {
   logger.trace("Calling User update Api");
 
-  const userID = req.params.id;
-  const email = req.body.email;
-  const password = req.body.password;
+  const { username: userID, group: groupName } = req.body;
 
   try {
     const userForUpdate = await User.findById(userID);
 
     if (!userForUpdate)
-      return res.status(404).send({
+      res.status(404).send({
         message: "No user was found with the provided id",
       });
 
-    userForUpdate.password = password;
-    userForUpdate.email = email;
+    userForUpdate.group = password;
 
     await userForUpdate.save();
 
@@ -131,14 +122,45 @@ exports.delete = async (req, res) => {
     const userDeleted = await User.findByIdAndRemove({ _id: userID });
 
     if (!userDeleted)
-      return res.status(404).send({
+      res.status(404).send({
         message: "No user was found with the provided id",
       });
     else
-      return res.status(200).send({
+      res.status(200).send({
         message: "User deleted",
       });
   } catch (err) {
+    res.status(500).send({
+      message: "Some error occurred",
+      error: err.message,
+    });
+  }
+};
+
+// Update a User by the id in the request
+exports.addToGroup = async (req, res) => {
+  logger.trace("Calling User Add to Group Api");
+
+  try {
+    const newGroup = new Group({
+      group: req.body.group,
+    });
+
+
+
+    const providedUsername = req.params.id;
+
+    const user = await User.findOne({ username: providedUsername })
+    user.groups.push(newGroup)
+
+    //user.groups = newGroup;
+
+    const updatedUser = await user.save();
+    
+    res.send(updatedUser);
+
+  } catch (err) {
+    logger.error(err);
     res.status(500).send({
       message: "Some error occurred",
       error: err.message,

@@ -73,34 +73,7 @@ export default class Login extends Component {
         this.setState({ hasError: true });
       });
 
-    /*
-    fetch(process.env.REACT_APP_BACKEND + "/api/authenticate", {
-      method: "POST",
-      body: JSON.stringify(this.state),
-      headers: {
-        "Content-Type": "application/json",
-        crossDomain: "true",
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("200");
-          console.log(res);
-          this.props.history.push("/");
-        } else {
-          console.log(res);
-          console.log("other");
-          this.setState({ hasError: true });
-          const error = new Error(res.error);
-          throw error;
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        this.setState({ hasError: true });
-      });
-
-      */
+    
   };
 
   validationSchema = Yup.object().shape({

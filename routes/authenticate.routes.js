@@ -4,7 +4,7 @@ module.exports = (app) => {
   var router = require("express").Router();
 
   // Authenticate using username
-  router.get("/authenticate", async (req, res) => {
+  router.post("/authenticate", async (req, res) => {
     await login.authenticate(req, res);
   });
 

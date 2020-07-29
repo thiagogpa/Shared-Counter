@@ -11,9 +11,10 @@ exports.authenticate = async (req, res) => {
   logger.trace("Calling Login Authenticate Api");
 
   const { username: providedUsername, password: providedPassword } = req.body;
+  
 
   try {
-    const user = await User.findOne({ email: providedUsername });
+    const user = await User.findOne({ username: providedUsername });
     if (!user)
       res.status(404).send({
         message: "No user was found with the provided id",
@@ -38,7 +39,7 @@ exports.authenticate = async (req, res) => {
           //Password did NOT match
           logger.debug("Password did not match");
           res.status(401).json({
-            error: "Incorrect email or password",
+            error: "Incorrect username or password",
           });
         }
       })
@@ -51,6 +52,7 @@ exports.authenticate = async (req, res) => {
         });
       });
   } catch (err) {
+    logger.error(err)
     res.status(500).send({
       message: "Some error occurred",
       error: err.message,

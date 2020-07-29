@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 //schema
 const GroupSchema = new mongoose.Schema({
@@ -9,14 +9,14 @@ const GroupSchema = new mongoose.Schema({
 
 //schema
 const UserSchema = new mongoose.Schema({
-  email: {
+  username: {
     type: String,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
   },
-  group: GroupSchema
+  groups: [GroupSchema]
 });
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model("user", UserSchema);
