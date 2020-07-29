@@ -2,6 +2,7 @@ const { logger } = require("../config/logger");
 const uuid = require("uuid");
 const { check, validationResult } = require("express-validator");
 let User = require("../models/User");
+let Group = require("../models/Group");
 const bcrypt = require("bcrypt");
 
 // Create and Save a new User
@@ -9,9 +10,15 @@ exports.create = async (req, res) => {
   logger.trace("Calling User Creation Api");
 
   try {
+
+    const newGroup = new Group({
+      group: req.body.group,
+    });
+
     const newUser = new User({
       email: req.body.email,
       password: req.body.password,
+      group: newGroup
     });
 
     const user = await User.findOne({ email: newUser.email });
