@@ -22,18 +22,18 @@ module.exports = (app) => {
           error: errors.array(),
         });
       }
-      res.json(await user.create(req, res));
+      await user.create(req, res);
     }
   );
 
   // Retrieve all Users
   router.get("/", async (req, res) => {
-    res.json(await user.findAll(req, res));
+    await user.findAll(req, res);
   });
 
   // Retrieve a single User by ID
   router.get("/:id", async (req, res) => {
-    res.json(await user.findOne(req, res));
+    await user.findOne(req, res);
   });
 
   // Update a User by id
@@ -55,7 +55,7 @@ module.exports = (app) => {
           error: errors.array(),
         });
       }
-      res.json(await user.update(req, res));
+      await user.update(req, res);
     }
   );
 

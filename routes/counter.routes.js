@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const user = require("../controllers/user.controller");
+  const counter = require("../controllers/counter.controller");
   const { check, validationResult } = require("express-validator");
   var router = require("express").Router();
 
@@ -17,14 +17,14 @@ module.exports = (app) => {
           error: errors.array(),
         });
       }
-      await user.create(req, res);
+      await counter.create(req, res);
     }
   );
 
   // Retrieve a single User by ID
   router.get("/:code", async (req, res) => {
-    await user.findOne(req, res);
+    await counter.findOne(req, res);
   });
 
-  app.use("/api", router);
+  app.use("/api/counter", router);
 };

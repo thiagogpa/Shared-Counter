@@ -42,7 +42,7 @@ export default function SearchBar() {
     });
 
     axiosInstance
-      .get("/api/" + event.counterName.toUpperCase())
+      .get("/api/counter/" + event.counterName.toUpperCase())
       .then((response) => {
         //console.log(response.data);
         localStorage.setItem("currentCounterName", response.data.code);
@@ -60,7 +60,7 @@ export default function SearchBar() {
     });
 
     axiosInstance
-      .post("/api/addCounter", {
+      .post("/api/counter/addCounter", {
         code: counterName,
       })
       .then((response) => {
