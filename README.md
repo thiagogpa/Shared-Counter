@@ -10,3 +10,6 @@
      
      npm install
      node server.js
+
+Here`s q quick demo
+https://youtu.be/PLbJg8E1PEc
